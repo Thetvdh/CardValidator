@@ -13,13 +13,15 @@
 //        the security code - a 3 digit integer
 //the cardholders name - a string of not more than 24 characters
 
-typedef struct card {
+#define CARDNUMBER_CAP 16+1
+#define NAME_CAP 24+1
 
-    char cardNumber[16];
+typedef struct card {
+    char cardNumber[CARDNUMBER_CAP];
     int issueDate;
     int expiryDate;
     int securityCode;
-    char name[24];
+    char name[NAME_CAP];
 
 } card;
 
@@ -108,32 +110,31 @@ int validateCardNumber(char *number) {
 }
 
 void getCardNumber(card *custCard) {
-
     char buffer[BUFFER_SIZE];
-    char number[16];
+    char number[CARDNUMBER_CAP];
     int isValid = FALSE;
 
     while(!isValid) {
         printf("Enter card number (16 digits): ");
+
         if (fgets(buffer, sizeof(buffer), stdin)) {
             fflush(stdin);
-            printf("Buffer: %s\n", buffer);
             buffer[strcspn(buffer,"\n")] = 0;
-            printf("Buffer after \\n removed: %s\n", buffer);
+
             if (1 == sscanf(buffer, "%[^\n]s", number)) {
-                printf("Number: %s\n", number);
                 if (validateCardNumber(number) && strlen(number) <= 16) {
-                    strncpy(custCard->cardNumber, number, 16);
-                    printf("From struct = %s\n", custCard->cardNumber);
+		    number[CARDNUMBER_CAP] = '\0';
+
+                    strncpy(custCard->cardNumber, number, CARDNUMBER_CAP);
+
                     isValid = TRUE;
-                } else {
-                    printf("Invalid card number.\n");
                 }
 
+		else {
+                    printf("Invalid card number.\n");
+                }
             }
-
         }
-
     }
 }
 
@@ -209,7 +210,7 @@ int main() {
 //    getCVV(pCard);
 //    getHolderName(pCard);
 
-    printf("%s\n", pCard->cardNumber);
+     printf("%s\n", pCard->cardNumber);
 //    printf("%d\n", pCard->issueDate);
 //    printf("%d\n", pCard->expiryDate);
 //    printf("%d\n", pCard->securityCode);
