@@ -3,18 +3,27 @@
 #include <ctype.h>
 #include <string.h>
 
+#ifdef _WIN32
+#define CLEAR_SCREEN system("cls")
+#endif
+
+#ifdef linux
+#define CLEAR_SCREEN system("clear")
+#endif
+
 #define BUFFER_SIZE 256
 //#define NELEMS(x) (sizeof(x) / sizeof(x[0])
 #define TRUE 1
 #define FALSE 0
+#define CARDNUMBER_CAP 16+1
+#define NAME_CAP 24+1
+
 
 //the card number - a 16 digit character array
 //        the issue date and the expiry date - both in the format mmyy
 //        the security code - a 3 digit integer
 //the cardholders name - a string of not more than 24 characters
 
-#define CARDNUMBER_CAP 16+1
-#define NAME_CAP 24+1
 
 typedef struct card {
     char cardNumber[CARDNUMBER_CAP];
@@ -23,7 +32,11 @@ typedef struct card {
     int securityCode;
     char name[NAME_CAP];
 
+    struct card *next;
+
 } card;
+
+
 
 void getHolderName(card *custCard) {
 
@@ -167,7 +180,7 @@ void getDate(card *custCard, int type) {
         int mm, yy;
 
         while(!isValid) {
-            printf("Enter issue date in mm/yy: ");
+            printf("Enter %s date in mm/yy: ", type == 10  ? "issue" : "expiry");
             if (fgets(buffer, sizeof(buffer), stdin)) {
                 fflush(stdin);
                 if (2 == sscanf(buffer, "%d/%d", &mm, &yy)) {
@@ -196,25 +209,107 @@ void getDate(card *custCard, int type) {
 
 }
 
+void createNewList(card *pFirstNode, card *pLastNode) {
+
+    card *pNewCard = (card *) malloc(sizeof(card));
+
+    pNewCard->next = NULL;
+
+    getCardNumber(pNewCard);
+    getDate(pNewCard, 10);
+    getDate(pNewCard, 20);
+    getCVV(pNewCard);
+    getHolderName(pNewCard);
+
+    pFirstNode = pLastNode = pNewCard;
+}
+
+void createNewCard(card *pFirstNode, card *pLastNode) {
+
+    if(pFirstNode == NULL) {
+        createNewList(pFirstNode, pLastNode);
+    }
+    else {
+        card *pNewCard = (card *) malloc(sizeof(card));
+        getCardNumber(pNewCard);
+        getDate(pNewCard, 10);
+        getDate(pNewCard, 20);
+        getCVV(pNewCard);
+        getHolderName(pNewCard);
+        if(pFirstNode == pLastNode) {
+            pFirstNode->next = pNewCard;
+            pLastNode = pNewCard;
+        }
+        else {
+            pLastNode->next = pNewCard;
+            pNewCard->next = NULL;
+            pLastNode = pNewCard;
+        }
+
+
+    }
+
+}
+
+void printCards(card *pFirstNode) {
+    card *pCards = pFirstNode;
+
+    printf("All cards are as follows\n");
+    while(pCards != NULL) {
+        printf("Card Number: %s", pCards->cardNumber);
+        printf("Expiry Date: %01d", pCards->expiryDate);
+        printf("Issue Date: %d", pCards->issueDate);
+        printf("CVV: %d", pCards->securityCode);
+        printf("Card Holder: %s", pCards->name);
+        printf("--------------------------------");
+        pCards = pCards->next;
+    }
+}
+
+
+int printMenu() {
+
+    char buffer[BUFFER_SIZE];
+    int choice;
+    CLEAR_SCREEN;
+    printf("|-------Menu-------|\n");
+    printf("| 1) Create Card   |\n");
+    printf("| 2) View Card     |\n");
+    printf("| 3) Exit          |\n");
+    printf("|------------------|\n");
+
+    while(TRUE) {
+        printf("Enter a choice: ");
+        if (fgets(buffer, sizeof(buffer), stdin)) {
+            if (1 == sscanf(buffer, "%d", &choice)) {
+                if(choice <= 3 && choice >= 1) {
+                    return choice;
+                }
+                else {
+                    printf("Invalid option\n");
+                }
+
+            }
+        }
+    }
+
+    return 0;
+}
+
+
+
 
 int main() {
 
-    card custCard;
+    card *pFirstNode = NULL;
+    card *pLastNode = NULL;
 
-    card *pCard = &custCard;
-    getCardNumber(pCard);
-    // Type 10 = issue date
-    // Type 20 = expiry date
-//    getDate(pCard, 10);
-//    getDate(pCard, 20);
-//    getCVV(pCard);
-//    getHolderName(pCard);
+    createNewCard(pFirstNode, pLastNode);
+    printf("Value in first node %d", pFirstNode->issueDate);
+//    createNewCard(pFirstNode, pLastNode);
+//    createNewCard(pFirstNode, pLastNode);
 
-     printf("%s\n", pCard->cardNumber);
-//    printf("%d\n", pCard->issueDate);
-//    printf("%d\n", pCard->expiryDate);
-//    printf("%d\n", pCard->securityCode);
-//    printf("%s\n", pCard->name);
+    printCards(pFirstNode);
 
 
     return 0;
