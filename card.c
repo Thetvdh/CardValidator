@@ -3,6 +3,7 @@
 #include <ctype.h>
 #include <string.h>
 
+
 #ifdef _WIN32
 #define CLEAR_SCREEN system("cls")
 #endif
@@ -209,7 +210,10 @@ void getDate(card *custCard, int type) {
 
 }
 
-void createNewList(card *pFirstNode, card *pLastNode) {
+static card *pFirstNode = NULL;
+static card *pLastNode = NULL;
+
+void createNewList() {
 
     card *pNewCard = (card *) malloc(sizeof(card));
 
@@ -224,7 +228,7 @@ void createNewList(card *pFirstNode, card *pLastNode) {
     pFirstNode = pLastNode = pNewCard;
 }
 
-void createNewCard(card *pFirstNode, card *pLastNode) {
+void createNewCard() {
 
     if(pFirstNode == NULL) {
         createNewList(pFirstNode, pLastNode);
@@ -251,17 +255,17 @@ void createNewCard(card *pFirstNode, card *pLastNode) {
 
 }
 
-void printCards(card *pFirstNode) {
+void printCards() {
     card *pCards = pFirstNode;
 
     printf("All cards are as follows\n");
     while(pCards != NULL) {
-        printf("Card Number: %s", pCards->cardNumber);
-        printf("Expiry Date: %01d", pCards->expiryDate);
-        printf("Issue Date: %d", pCards->issueDate);
-        printf("CVV: %d", pCards->securityCode);
-        printf("Card Holder: %s", pCards->name);
-        printf("--------------------------------");
+        printf("Card Number: %s\n", pCards->cardNumber);
+        printf("Expiry Date: %03d\n", pCards->expiryDate);
+        printf("Issue Date: %d\n", pCards->issueDate);
+        printf("CVV: %d\n", pCards->securityCode);
+        printf("Card Holder: %s\n", pCards->name);
+        printf("--------------------------------\n");
         pCards = pCards->next;
     }
 }
@@ -275,7 +279,8 @@ int printMenu() {
     printf("|-------Menu-------|\n");
     printf("| 1) Create Card   |\n");
     printf("| 2) View Card     |\n");
-    printf("| 3) Exit          |\n");
+    printf("| 3) Show all Cards|\n");
+    printf("| 4) Exit          |\n");
     printf("|------------------|\n");
 
     while(TRUE) {
@@ -292,8 +297,6 @@ int printMenu() {
             }
         }
     }
-
-    return 0;
 }
 
 
@@ -301,18 +304,36 @@ int printMenu() {
 
 int main() {
 
-    card *pFirstNode = NULL;
-    card *pLastNode = NULL;
 
-    createNewCard(pFirstNode, pLastNode);
-    printf("Value in first node %d", pFirstNode->issueDate);
-//    createNewCard(pFirstNode, pLastNode);
-//    createNewCard(pFirstNode, pLastNode);
+    int menu_choice;
 
-    printCards(pFirstNode);
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "EndlessLoop"
+    while(TRUE) {
+
+        menu_choice = printMenu();
+
+        switch(menu_choice) {
+            case 1:
+                createNewCard();
+                break;
+            case 2:
+                // TODO implement search for different cards
+                printf("This feature is under development. Please enter a different option\n");
+                break;
+            case 3:
+                printCards();
+                break;
+            case 4:
+                exit(EXIT_SUCCESS);
+            default:
+                printf("Incorrect value has been entered. Please try again.\n");
+        }
 
 
-    return 0;
+    }
+#pragma clang diagnostic pop
+
 
 
 }
