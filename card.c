@@ -255,6 +255,15 @@ void createNewCard() {
     }
 }
 
+void printCard(card *pCardIterator) {
+    printf("Card Number: %s\n", pCardIterator->cardNumber);
+    printf("Expiry Date: %03d\n", pCardIterator->expiryDate); // TODO fix number padding here
+    printf("Issue Date: %03d\n", pCardIterator->issueDate); // TODO fix number padding here
+    printf("CVV: %d\n", pCardIterator->securityCode);
+    printf("Card Holder: %s\n", pCardIterator->name);
+    printf("--------------------------------\n");
+}
+
 void printCards() {
     card *pCards = pFirstNode;
     if(pCards == NULL) {
@@ -266,12 +275,7 @@ void printCards() {
         printf("All cards are as follows\n");
         printf("--------------------------------\n");
         while (pCards != NULL) {
-            printf("Card Number: %s\n", pCards->cardNumber);
-            printf("Expiry Date: %03d\n", pCards->expiryDate);
-            printf("Issue Date: %03d\n", pCards->issueDate);
-            printf("CVV: %d\n", pCards->securityCode);
-            printf("Card Holder: %s\n", pCards->name);
-            printf("--------------------------------\n");
+            printCard(pCards);
             pCards = pCards->next;
         }
         printf("Press ENTER to continue: ");
@@ -279,6 +283,46 @@ void printCards() {
     }
 }
 
+
+
+void searchCardNum(char * number) {
+    int numFound = 0;
+    card *pCardIterator = pFirstNode;
+    while(pCardIterator != NULL) {
+        int equality = strncmp(pCardIterator->cardNumber, number, sizeof(pCardIterator->cardNumber));
+        if(!equality) {
+            printf("Card with the number %s was found\n", number);
+            printCard(pCardIterator);
+            numFound++;
+        }
+        pCardIterator = pCardIterator->next;
+    }
+    if(numFound == 0) {
+        printf("Sorry, no people with that name could be found.\n");
+    }
+    getchar();
+}
+
+
+
+
+void searchName(char * name) {
+    card *pCardIterator = pFirstNode;
+    int numFound = 0;
+    while (pCardIterator != NULL) {
+        int equality = strncmp(pCardIterator->name, name, sizeof(pCardIterator->name));
+        if (!equality) {
+            printf("Card with the name %s was found!\n", name);
+            printCard(pCardIterator);
+            numFound++;
+        }
+        pCardIterator = pCardIterator->next;
+    }
+    if(numFound == 0) {
+        printf("Sorry, no people with that name could be found.\n");
+    }
+    getchar();
+}
 
 int printMenu() {
 
@@ -289,7 +333,7 @@ int printMenu() {
     // INFO menu does not get reprinted in CLion run. No clue why.
     printf("|-------Menu-------|\n");
     printf("| 1) Create Card   |\n");
-    printf("| 2) View Card     |\n");
+    printf("| 2) Search Card   |\n");
     printf("| 3) Show all Cards|\n");
     printf("| 4) Exit          |\n");
     printf("|------------------|\n");
@@ -297,6 +341,7 @@ int printMenu() {
     while(TRUE) {
         printf("Enter a choice: ");
         if (fgets(buffer, sizeof(buffer), stdin)) {
+            fflush(stdin);
             if (1 == sscanf(buffer, "%d", &choice)) {
                 if(choice <= menuOptions && choice >= 1) {
                     return choice;
@@ -309,15 +354,27 @@ int printMenu() {
         }
     }
 }
+/*
+// TODO make this shite work
+void searchMenu() {
 
+    char buffer[BUFFER_SIZE];
+    int choice;
 
+    printf("Enter a search option: ");
+    if(fgets(buffer, sizeof(buffer), stdin)) {
+        fflush(stdin);
+        if(1 == sscanf(buffer, "%d", &choice)) {
 
+            }
+        }
+}
+*/
 
 int main() {
 
 
     int menu_choice;
-
 
     while(TRUE) {
 
@@ -328,9 +385,8 @@ int main() {
                 createNewCard();
                 break;
             case 2:
-                // TODO implement search for different cards
-                printf("This feature is under development. Please enter a different option\nPress ENTER to continue");
-                getchar();
+                searchName("Jack");
+                searchCardNum("1111111111111111");
                 break;
             case 3:
                 printCards();
