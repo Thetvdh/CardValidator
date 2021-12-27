@@ -13,15 +13,14 @@
 #endif
 
 #define BUFFER_SIZE 256
-//#define NELEMS(x) (sizeof(x) / sizeof(x[0])
 #define TRUE 1
 #define FALSE 0
-#define CARDNUMBER_CAP 16+1
-#define NAME_CAP 24+1
+#define CARDNUMBER_CAP (16+1)
+#define NAME_CAP (24+1)
 
 
 //the card number - a 16 digit character array
-//        the issue date and the expiry date - both in the format mmyy
+//        the issue date and the expiry date - both in the format mm/yy
 //        the security code - a 3 digit integer
 //the cardholders name - a string of not more than 24 characters
 
@@ -50,14 +49,10 @@ void getHolderName(card *custCard) {
         printf("Enter account holders name (24 Characters): ");
         if(fgets(buffer, sizeof(buffer), stdin)) {
             fflush(stdin);
-//            printf("Buffer = %s\n", buffer);
             buffer[strcspn(buffer, "\n")] = 0;
-//            printf("Buffer without \\n = %s\n", buffer);
             if(1 == sscanf(buffer, "%[^\n]s", name)) {
-                printf("name = %s\n", name);
                 if(strlen(name) <= 24) {
                     strncpy(custCard->name, name, 24);
-//                    printf("From struct = %s\n", custCard->name);
                     isValid = TRUE;
                 }
                 else {
@@ -137,14 +132,13 @@ void getCardNumber(card *custCard) {
 
             if (1 == sscanf(buffer, "%[^\n]s", number)) {
                 if (validateCardNumber(number) && strlen(number) <= 16) {
-		    number[CARDNUMBER_CAP] = '\0';
+		            number[CARDNUMBER_CAP] = '\0';
 
                     strncpy(custCard->cardNumber, number, CARDNUMBER_CAP);
 
                     isValid = TRUE;
                 }
-
-		else {
+                else {
                     printf("Invalid card number.\n");
                 }
             }
@@ -154,7 +148,6 @@ void getCardNumber(card *custCard) {
 
 int issueDateAssign(card *custCard, int mm, int yy) {
     if ((mm >=1 && mm <= 12) && (yy <= 21)) {
-        printf("Valid date\n");
         custCard->issueDate = (mm * 100) + yy;
         return TRUE;
     }
@@ -165,7 +158,6 @@ int issueDateAssign(card *custCard, int mm, int yy) {
 
 int issueExpiryAssign(card *custCard, int mm, int yy) {
     if ((mm >=1 && mm <= 12) && (yy >= 21)) {
-        printf("Valid date\n");
         custCard->expiryDate = (mm * 100) + yy;
         return TRUE;
     }
@@ -173,6 +165,8 @@ int issueExpiryAssign(card *custCard, int mm, int yy) {
         return FALSE;
     }
 }
+
+
 
 void getDate(card *custCard, int type) {
 
@@ -185,7 +179,7 @@ void getDate(card *custCard, int type) {
             if (fgets(buffer, sizeof(buffer), stdin)) {
                 fflush(stdin);
                 if (2 == sscanf(buffer, "%d/%d", &mm, &yy)) {
-                    // This could and probably should be a switch case statement but i'm lazy
+                    // This could and probably should be a switch case statement, but I'm lazy
                     if(type == 10) {
                         if(issueDateAssign(custCard, mm, yy)) {
                             isValid = TRUE;
@@ -201,7 +195,7 @@ void getDate(card *custCard, int type) {
 
                 }
                 else {
-                    printf("Invalid issue date. Please enter in format mmyy\n");
+                    printf("Invalid issue date. Please enter in format mm/yy\n");
                 }
             }
         }
@@ -209,6 +203,7 @@ void getDate(card *custCard, int type) {
 
 
 }
+
 
 static card *pFirstNode = NULL;
 static card *pLastNode = NULL;
@@ -234,7 +229,7 @@ void createNewList() {
 void createNewCard() {
 
     if(pFirstNode == NULL) {
-        createNewList(pFirstNode, pLastNode);
+        createNewList();
     }
     else {
         card *pNewCard = (card *) malloc(sizeof(card));
@@ -333,7 +328,8 @@ int main() {
                 break;
             case 2:
                 // TODO implement search for different cards
-                printf("This feature is under development. Please enter a different option\n");
+                printf("This feature is under development. Please enter a different option\nPress ENTER to continue");
+                getchar();
                 break;
             case 3:
                 printCards();
@@ -353,4 +349,5 @@ int main() {
 
 
 }
+
 
