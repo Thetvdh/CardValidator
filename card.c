@@ -226,6 +226,9 @@ void createNewList() {
     getHolderName(pNewCard);
 
     pFirstNode = pLastNode = pNewCard;
+    printf("Card successfully created\n");
+    printf("Press ENTER to continue: ");
+    getchar();
 }
 
 void createNewCard() {
@@ -249,24 +252,34 @@ void createNewCard() {
             pNewCard->next = NULL;
             pLastNode = pNewCard;
         }
+        printf("Card successfully created\n");
+        printf("Press ENTER to continue: ");
+        getchar();
 
 
     }
-
 }
 
 void printCards() {
     card *pCards = pFirstNode;
-
-    printf("All cards are as follows\n");
-    while(pCards != NULL) {
-        printf("Card Number: %s\n", pCards->cardNumber);
-        printf("Expiry Date: %03d\n", pCards->expiryDate);
-        printf("Issue Date: %d\n", pCards->issueDate);
-        printf("CVV: %d\n", pCards->securityCode);
-        printf("Card Holder: %s\n", pCards->name);
-        printf("--------------------------------\n");
-        pCards = pCards->next;
+    if(pCards == NULL) {
+        printf("Sorry. There are no cards stored\n");
+        printf("Press ENTER to continue: ");
+        getchar();
+    }
+    else {
+        printf("All cards are as follows\n");
+        while (pCards != NULL) {
+            printf("Card Number: %s\n", pCards->cardNumber);
+            printf("Expiry Date: %03d\n", pCards->expiryDate);
+            printf("Issue Date: %03d\n", pCards->issueDate);
+            printf("CVV: %d\n", pCards->securityCode);
+            printf("Card Holder: %s\n", pCards->name);
+            printf("--------------------------------\n");
+            pCards = pCards->next;
+        }
+        printf("Press ENTER to continue: ");
+        getchar();
     }
 }
 
@@ -275,7 +288,9 @@ int printMenu() {
 
     char buffer[BUFFER_SIZE];
     int choice;
+    int menuOptions = 4; // Change this value based on how many options are available in the menu
     CLEAR_SCREEN;
+    // INFO menu does not get reprinted in CLion run. No clue why.
     printf("|-------Menu-------|\n");
     printf("| 1) Create Card   |\n");
     printf("| 2) View Card     |\n");
@@ -287,7 +302,7 @@ int printMenu() {
         printf("Enter a choice: ");
         if (fgets(buffer, sizeof(buffer), stdin)) {
             if (1 == sscanf(buffer, "%d", &choice)) {
-                if(choice <= 3 && choice >= 1) {
+                if(choice <= menuOptions && choice >= 1) {
                     return choice;
                 }
                 else {
@@ -324,6 +339,8 @@ int main() {
                 printCards();
                 break;
             case 4:
+                CLEAR_SCREEN;
+                printf("Thank you for using card validator!\n");
                 exit(EXIT_SUCCESS);
             default:
                 printf("Incorrect value has been entered. Please try again.\n");
