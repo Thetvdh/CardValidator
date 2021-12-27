@@ -264,6 +264,7 @@ void printCards() {
     }
     else {
         printf("All cards are as follows\n");
+        printf("--------------------------------\n");
         while (pCards != NULL) {
             printf("Card Number: %s\n", pCards->cardNumber);
             printf("Expiry Date: %03d\n", pCards->expiryDate);
