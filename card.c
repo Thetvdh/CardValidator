@@ -257,28 +257,31 @@ void createNewCard() {
 
 void printCards() {
     card *pCards = pFirstNode;
+
     if(pCards == NULL) {
         printf("Sorry. There are no cards stored\n");
         printf("Press ENTER to continue: ");
         getchar();
     }
+
     else {
         printf("All cards are as follows\n");
         printf("--------------------------------\n");
+
         while (pCards != NULL) {
             printf("Card Number: %s\n", pCards->cardNumber);
-            printf("Expiry Date: %03d\n", pCards->expiryDate);
-            printf("Issue Date: %03d\n", pCards->issueDate);
+            printf("Expiry Date: %04d\n", pCards->expiryDate);
+            printf("Issue Date: %04d\n", pCards->issueDate);
             printf("CVV: %d\n", pCards->securityCode);
             printf("Card Holder: %s\n", pCards->name);
             printf("--------------------------------\n");
             pCards = pCards->next;
         }
+
         printf("Press ENTER to continue: ");
         getchar();
     }
 }
-
 
 int printMenu() {
 
