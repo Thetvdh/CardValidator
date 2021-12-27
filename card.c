@@ -307,8 +307,7 @@ int main() {
 
     int menu_choice;
 
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "EndlessLoop"
+
     while(TRUE) {
 
         menu_choice = printMenu();
@@ -332,7 +331,7 @@ int main() {
 
 
     }
-#pragma clang diagnostic pop
+
 
 
 
