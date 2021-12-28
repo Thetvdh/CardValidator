@@ -6,9 +6,7 @@
 
 #ifdef _WIN32
 #define CLEAR_SCREEN system("cls")
-#endif
-
-#ifdef linux
+#else
 #define CLEAR_SCREEN system("clear")
 #endif
 
@@ -157,7 +155,8 @@ int issueDateAssign(card *custCard, int mm, int yy) {
 }
 
 int issueExpiryAssign(card *custCard, int mm, int yy) {
-    if ((mm >=1 && mm <= 12) && (yy >= 21)) {
+// This could actually Y2K, but it's a personal project so I don't care.
+    if ((mm >=1 && mm <= 12) && (yy >= 21) && (yy <= 99)) {
         custCard->expiryDate = (mm * 100) + yy;
         return TRUE;
     }
@@ -257,8 +256,8 @@ void createNewCard() {
 
 void printCard(card *pCardIterator) {
     printf("Card Number: %s\n", pCardIterator->cardNumber);
-    printf("Expiry Date: %03d\n", pCardIterator->expiryDate); // TODO fix number padding here
-    printf("Issue Date: %03d\n", pCardIterator->issueDate); // TODO fix number padding here
+    printf("Expiry Date: %04d\n", pCardIterator->expiryDate);
+    printf("Issue Date: %04d\n", pCardIterator->issueDate);
     printf("CVV: %d\n", pCardIterator->securityCode);
     printf("Card Holder: %s\n", pCardIterator->name);
     printf("--------------------------------\n");
@@ -272,11 +271,14 @@ void printCards() {
         getchar();
     }
     else {
+        int counter = 0;
         printf("All cards are as follows\n");
         printf("--------------------------------\n");
         while (pCards != NULL) {
+            printf("Cycle %d: %p\n", counter, pCards);
             printCard(pCards);
             pCards = pCards->next;
+            counter++;
         }
         printf("Press ENTER to continue: ");
         getchar();
