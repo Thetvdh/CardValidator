@@ -383,6 +383,7 @@ void searchCardNum() {
     if(numFound == 0) {
         printf("Sorry, no people with that card number could be found.\n");
     }
+    printf("Press ENTER to continue: ");
     getchar();
 }
 
@@ -411,7 +412,6 @@ void searchName() {
         }
     }
 
-    printf("NAME: %s\n", name);
 
 
     card *pCardIterator = pFirstNode;
@@ -428,6 +428,7 @@ void searchName() {
     if(numFound == 0) {
         printf("Sorry, no people with that name could be found.\n");
     }
+    printf("Press ENTER to continue: ");
     getchar();
 }
 
@@ -470,6 +471,7 @@ void searchExpiryDate() {
     if(numFound == 0) {
         printf("Sorry, no people with that expiry date could be found.\n");
     }
+    printf("Press ENTER to continue: ");
     getchar();
 
 
@@ -511,15 +513,16 @@ void searchMenu() {
 
     char buffer[BUFFER_SIZE];
     int choice;
-    CLEAR_SCREEN;
-    printf("|----Search Menu----|\n");
-    printf("| 1) Card Number    |\n");
-    printf("| 2) Search Name    |\n");
-    printf("| 3) Expiry Date    |\n");
-    printf("| 4) Exit           |\n");
-    printf("|-------------------|\n");
 
     while (TRUE) {
+        CLEAR_SCREEN;
+        printf("|----Search Menu----|\n");
+        printf("| 1) Card Number    |\n");
+        printf("| 2) Search Name    |\n");
+        printf("| 3) Expiry Date    |\n");
+        printf("| 4) Exit           |\n");
+        printf("|-------------------|\n");
+
         printf("Enter a search option: ");
         if (fgets(buffer, sizeof(buffer), stdin)) {
             fflush(stdin);
