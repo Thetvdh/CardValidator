@@ -342,7 +342,33 @@ void printCards() {
 
 
 
-void searchCardNum(char * number) {
+void searchCardNum() {
+
+    char buffer[BUFFER_SIZE];
+    char number[CARDNUMBER_CAP];
+    int isValid = FALSE;
+    while(!isValid) {
+        printf("Enter the card number to search for: ");
+        if(fgets(buffer, sizeof(buffer), stdin)) {
+            buffer[strcspn(buffer, "\n")] = 0;
+            if(strlen(buffer) > 19) {
+                printf("Invalid card number\n");
+            }
+            else {
+                if(1 == sscanf(buffer, "%s", number)) {
+                    number[CARDNUMBER_CAP] = '\0';
+                    isValid = TRUE;
+                }
+                else {
+                    printf("Error getting number input\n");
+                }
+            }
+
+        }
+        else {
+            printf("Error getting number input\n");
+        }
+    }
     int numFound = 0;
     card *pCardIterator = pFirstNode;
     while(pCardIterator != NULL) {
@@ -355,7 +381,7 @@ void searchCardNum(char * number) {
         pCardIterator = pCardIterator->next;
     }
     if(numFound == 0) {
-        printf("Sorry, no people with that name could be found.\n");
+        printf("Sorry, no people with that card number could be found.\n");
     }
     getchar();
 }
@@ -363,7 +389,31 @@ void searchCardNum(char * number) {
 
 
 
-void searchName(char * name) {
+void searchName() {
+
+    char buffer[BUFFER_SIZE];
+    char name[NAME_CAP];
+    int isValid = FALSE;
+    while(!isValid) {
+        printf("Enter the name to search for: ");
+        if (fgets(buffer, sizeof(buffer), stdin)) {
+            buffer[strcspn(buffer, "\n")] = 0;
+            if (strlen(buffer) > 24) {
+                printf("Invalid input\n");
+            }
+            else {
+                if(1 == sscanf(buffer, "%s", name)) {
+                    name[NAME_CAP] = '\0';
+                    isValid = TRUE;
+                }
+
+            }
+        }
+    }
+
+    printf("NAME: %s\n", name);
+
+
     card *pCardIterator = pFirstNode;
     int numFound = 0;
     while (pCardIterator != NULL) {
@@ -379,6 +429,50 @@ void searchName(char * name) {
         printf("Sorry, no people with that name could be found.\n");
     }
     getchar();
+}
+
+void searchExpiryDate() {
+    char buffer[BUFFER_SIZE];
+    char expStr[6];
+    int mm, yy;
+    int date;
+    int isValid = FALSE;
+    int numFound = 0;
+
+    while(!isValid) {
+        printf("Enter the expiry date to search for (mm/yy): ");
+        if (fgets(buffer, sizeof(buffer), stdin)) {
+            if(2 == sscanf(buffer, "%d/%d", &mm, &yy)) {
+                if ((mm >=1 && mm <= 12) && (yy >= 21) && (yy <= 99)) {
+                    isValid = TRUE;
+                }
+                else {
+                    printf("Invalid date\n");
+                }
+            }
+
+        }
+    }
+
+    date = (mm * 100) + yy;
+    card *pCardIterator = pFirstNode;
+
+    while (pCardIterator != NULL) {
+        int equality = (date == pCardIterator->expiryDate);
+        if (equality) {
+            convertDateToStr(date, expStr);
+            printf("Card with the expiry date %s was found!\n", expStr);
+            printCard(pCardIterator);
+            numFound++;
+        }
+        pCardIterator = pCardIterator->next;
+    }
+    if(numFound == 0) {
+        printf("Sorry, no people with that expiry date could be found.\n");
+    }
+    getchar();
+
+
 }
 
 int printMenu() {
@@ -411,22 +505,48 @@ int printMenu() {
         }
     }
 }
-/*
-// TODO make this work
+
+
 void searchMenu() {
 
     char buffer[BUFFER_SIZE];
     int choice;
+    CLEAR_SCREEN;
+    printf("|----Search Menu----|\n");
+    printf("| 1) Card Number    |\n");
+    printf("| 2) Search Name    |\n");
+    printf("| 3) Expiry Date    |\n");
+    printf("| 4) Exit           |\n");
+    printf("|-------------------|\n");
 
-    printf("Enter a search option: ");
-    if(fgets(buffer, sizeof(buffer), stdin)) {
-        fflush(stdin);
-        if(1 == sscanf(buffer, "%d", &choice)) {
+    while (TRUE) {
+        printf("Enter a search option: ");
+        if (fgets(buffer, sizeof(buffer), stdin)) {
+            fflush(stdin);
+            buffer[strcspn(buffer, "\n")] = 0;
 
+            if (1 == sscanf(buffer, "%d", &choice)) {
+                switch (choice) {
+                    case 1:
+                        searchCardNum();
+                        break;
+                    case 2:
+                        searchName();
+                        break;
+                    case 3:
+                        searchExpiryDate();
+                    case 4:
+                        return;
+                    default:
+                        printf("Invalid option\n");
+                        break;
+
+                }
             }
         }
+    }
 }
-*/
+
 
 int main() {
 
@@ -442,8 +562,9 @@ int main() {
                 createNewCard();
                 break;
             case 2:
-                searchName("Jack");
-                searchCardNum("1111111111111111");
+                searchMenu();
+//                searchName("Jack");
+//                searchCardNum("1111111111111111");
                 break;
             case 3:
                 printCards();
