@@ -228,7 +228,7 @@ void createNewList() {
 void createNewCard() {
 
     if(pFirstNode == NULL) {
-        createNewList();
+        createNewList(); // First element of linked list
     }
     else {
         card *pNewCard = (card *) malloc(sizeof(card));
@@ -237,8 +237,10 @@ void createNewCard() {
         getDate(pNewCard, 20);
         getCVV(pNewCard);
         getHolderName(pNewCard);
+        // This is true when we are inserting the second list item
         if(pFirstNode == pLastNode) {
             pFirstNode->next = pNewCard;
+            pNewCard->next = NULL;
             pLastNode = pNewCard;
         }
         else {

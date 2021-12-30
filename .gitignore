@@ -1,9 +1,10 @@
 # Bins
 *.exe
+card
 
 # Vim structures
 *.swp
 *.un
 *~
 
-card
+
