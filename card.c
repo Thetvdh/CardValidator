@@ -13,14 +13,11 @@
 #define BUFFER_SIZE 256
 #define TRUE 1
 #define FALSE 0
-#define CARDNUMBER_CAP (16+1)
+#define CARDNUMBER_CAP (19+1)
 #define NAME_CAP (24+1)
 
 
-//the card number - a 16 digit character array
-//        the issue date and the expiry date - both in the format mm/yy
-//        the security code - a 3 digit integer
-//the cardholders name - a string of not more than 24 characters
+
 
 
 typedef struct card {
@@ -116,25 +113,56 @@ int validateCardNumber(char *number) {
 
 }
 
+
+
+int luhnValid(char *number) {
+
+    int numDigits = (int) strlen(number);
+    int finSum = 0;
+    int isSecond = FALSE;
+    int i;
+
+    for(i=numDigits - 1; i >= 0; i--) {
+        int d = number[i] - '0';
+        if(isSecond) {
+            d = d * 2;
+        }
+
+        finSum += d / 10;
+        finSum += d % 10;
+
+        isSecond = !isSecond;
+    }
+    return (finSum % 10 == 0);
+
+
+}
+
+
 void getCardNumber(card *custCard) {
     char buffer[BUFFER_SIZE];
     char number[CARDNUMBER_CAP];
     int isValid = FALSE;
 
     while(!isValid) {
-        printf("Enter card number (16 digits): ");
+        printf("Enter card number: ");
 
         if (fgets(buffer, sizeof(buffer), stdin)) {
             fflush(stdin);
             buffer[strcspn(buffer,"\n")] = 0;
 
             if (1 == sscanf(buffer, "%[^\n]s", number)) {
-                if (validateCardNumber(number) && strlen(number) <= 16) {
+                if (validateCardNumber(number) && ((strlen(number) == 13) || (strlen(number) == 16) || (strlen(number) == 19))) {
 		            number[CARDNUMBER_CAP] = '\0';
+                    if(luhnValid(number)) {
+                        strncpy(custCard->cardNumber, number, CARDNUMBER_CAP);
+                        isValid = TRUE;
+                    }
+                    else {
+                        printf("Invalid card number.\n");
+                    }
 
-                    strncpy(custCard->cardNumber, number, CARDNUMBER_CAP);
 
-                    isValid = TRUE;
                 }
                 else {
                     printf("Invalid card number.\n");
@@ -303,7 +331,6 @@ void printCards() {
         printf("All cards are as follows\n");
         printf("--------------------------------\n");
         while (pCards != NULL) {
-            printf("Cycle %d: %p\n", counter, pCards);
             printCard(pCards);
             pCards = pCards->next;
             counter++;
@@ -385,7 +412,7 @@ int printMenu() {
     }
 }
 /*
-// TODO make this shite work
+// TODO make this work
 void searchMenu() {
 
     char buffer[BUFFER_SIZE];
