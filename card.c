@@ -36,7 +36,7 @@ typedef struct card {
 void getHolderName(card *custCard) {
 
     char buffer[BUFFER_SIZE];
-    char name[24];
+    char name[NAME_CAP];
     int isValid = FALSE;
 
     while(!isValid) {
@@ -47,7 +47,9 @@ void getHolderName(card *custCard) {
             buffer[strcspn(buffer, "\n")] = 0;
             if(1 == sscanf(buffer, "%[^\n]s", name)) {
                 if(strlen(name) <= 24) {
-                    strncpy(custCard->name, name, 24);
+                    name[NAME_CAP] = '\0';
+                    strncpy(custCard->name, name, NAME_CAP);
+
                     isValid = TRUE;
                 }
                 else {
