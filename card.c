@@ -254,10 +254,36 @@ void createNewCard() {
     }
 }
 
+void convertDateToStr(int date, char *buff) {
+    int i;
+    int write = sprintf(buff, "%d", date);
+    
+    // Create a string that is in format: XXxx
+    if(write == 3) {
+        for(i = 3; i >= 1; --i)
+            buff[i] = buff[i - 1];
+
+        buff[0] = '0';
+    }
+    
+    // Simply shift digits in cells [2] and [3] along one, so we can add a '/'
+    buff[4] = buff[3];
+    buff[3] = buff[2];
+    buff[2] = '/';
+    
+    buff[5] = '\0';
+}
+
 void printCard(card *pCardIterator) {
+    char issStr[6];
+    char expStr[6];
+
+    convertDateToStr(pCardIterator->issueDate, issStr);
+    convertDateToStr(pCardIterator->expiryDate, expStr);
+
     printf("Card Number: %s\n", pCardIterator->cardNumber);
-    printf("Expiry Date: %04d\n", pCardIterator->expiryDate);
-    printf("Issue Date: %04d\n", pCardIterator->issueDate);
+    printf("Issue Date: %s\n", issStr);
+    printf("Expiry Date: %s\n", expStr);
     printf("CVV: %d\n", pCardIterator->securityCode);
     printf("Card Holder: %s\n", pCardIterator->name);
     printf("--------------------------------\n");
