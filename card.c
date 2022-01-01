@@ -18,6 +18,13 @@
 
 
 
+// This should be false in prod
+// DEVELOPER MODE
+#define DEBUG 0
+
+#if (DEBUG == 1)
+    #warning debug should be false in production. If this is a production compilation. Disable debugging and recompile
+#endif
 
 
 typedef struct card {
@@ -369,6 +376,7 @@ void searchCardNum() {
     while(!isValid) {
         printf("Enter the card number to search for: ");
         if(fgets(buffer, sizeof(buffer), stdin)) {
+            fflush(stdin);
             buffer[strcspn(buffer, "\n")] = 0;
             if(strlen(buffer) > 19) {
                 printf("Invalid card number\n");
@@ -417,6 +425,7 @@ void searchName() {
     while(!isValid) {
         printf("Enter the name to search for: ");
         if (fgets(buffer, sizeof(buffer), stdin)) {
+            fflush(stdin);
             buffer[strcspn(buffer, "\n")] = 0;
             if (strlen(buffer) > 24) {
                 printf("Invalid input\n");
@@ -462,6 +471,7 @@ void searchExpiryDate() {
     while(!isValid) {
         printf("Enter the expiry date to search for (mm/yy): ");
         if (fgets(buffer, sizeof(buffer), stdin)) {
+            fflush(stdin);
             if(2 == sscanf(buffer, "%d/%d", &mm, &yy)) {
                 if ((mm >=1 && mm <= 12) && (yy >= 21) && (yy <= 99)) {
                     isValid = TRUE;
@@ -503,6 +513,7 @@ int printMenu() {
     int menuOptions = 4; // Change this value based on how many options are available in the menu
     CLEAR_SCREEN;
     // INFO menu does not get reprinted in CLion run. No clue why.
+    printf("%s", DEBUG == TRUE ? "|-----Developer----|\n" : "");
     printf("|-------Menu-------|\n");
     printf("| 1) Create Card   |\n");
     printf("| 2) Search Card   |\n");
@@ -532,9 +543,9 @@ void searchMenu() {
 
     char buffer[BUFFER_SIZE];
     int choice;
-
     while (TRUE) {
         CLEAR_SCREEN;
+        printf("%s", DEBUG == TRUE ? "|-----Developer----|\n" : "");
         printf("|----Search Menu----|\n");
         printf("| 1) Card Number    |\n");
         printf("| 2) Search Name    |\n");
@@ -572,9 +583,7 @@ void searchMenu() {
 
 int main() {
 
-    // Manually change this line for debug mode
-    // PROD: remove this line and IF statement
-    int DEBUG = FALSE;
+    CLEAR_SCREEN;
 
     if(DEBUG) {
         createDeveloperCard();
@@ -595,8 +604,6 @@ int main() {
                 break;
             case 2:
                 searchMenu();
-//                searchName("Jack");
-//                searchCardNum("1111111111111111");
                 break;
             case 3:
                 printCards();
