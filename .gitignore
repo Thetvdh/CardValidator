@@ -7,5 +7,8 @@ card
 *.un
 *~
 
-
+# Folders
 /cmake-build-debug/
+
+# Testfiles
+testfile.c

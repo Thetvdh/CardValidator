@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+#include <time.h>
 
 
 #ifdef _WIN32
@@ -25,6 +26,9 @@
 #if (DEBUG == 1)
     #warning debug should be false in production. If this is a production compilation. Disable debugging and recompile
 #endif
+
+
+
 
 
 typedef struct card {
@@ -181,9 +185,28 @@ void getCardNumber(card *custCard) {
     }
 }
 
+int getCurrentYear() {
+    time_t rawTime;
+    struct tm *info;
+    char buffer[80];
+    char *overflow;
+    int year;
+
+    time(&rawTime);
+
+    info = localtime(&rawTime);
+
+    strftime(buffer, sizeof(buffer), "%y", info);
+
+    year = strtol(buffer, &overflow, 10);
+
+    free(overflow);
+    return year;
+}
+
 int issueDateAssign(card *custCard, int mm, int yy) {
     // Edit as required
-    int maxYear = 22;
+    int maxYear = getCurrentYear();
     if ((mm >=1 && mm <= 12) && (yy <= maxYear)) {
         custCard->issueDate = (mm * 100) + yy;
         return TRUE;
@@ -197,7 +220,7 @@ int issueExpiryAssign(card *custCard, int mm, int yy) {
 // This could actually Y2K, but it's a personal project so I don't care.
     // Edit as required
     int maxYear = 99;
-    int minYear = 22;
+    int minYear = getCurrentYear();
     if ((mm >=1 && mm <= 12) && (yy >= minYear) && (yy <= maxYear)) {
         custCard->expiryDate = (mm * 100) + yy;
         return TRUE;
