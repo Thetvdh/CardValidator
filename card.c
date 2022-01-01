@@ -182,7 +182,9 @@ void getCardNumber(card *custCard) {
 }
 
 int issueDateAssign(card *custCard, int mm, int yy) {
-    if ((mm >=1 && mm <= 12) && (yy <= 21)) {
+    // Edit as required
+    int maxYear = 22;
+    if ((mm >=1 && mm <= 12) && (yy <= maxYear)) {
         custCard->issueDate = (mm * 100) + yy;
         return TRUE;
     }
@@ -193,7 +195,10 @@ int issueDateAssign(card *custCard, int mm, int yy) {
 
 int issueExpiryAssign(card *custCard, int mm, int yy) {
 // This could actually Y2K, but it's a personal project so I don't care.
-    if ((mm >=1 && mm <= 12) && (yy >= 21) && (yy <= 99)) {
+    // Edit as required
+    int maxYear = 99;
+    int minYear = 22;
+    if ((mm >=1 && mm <= 12) && (yy >= minYear) && (yy <= maxYear)) {
         custCard->expiryDate = (mm * 100) + yy;
         return TRUE;
     }
@@ -210,6 +215,7 @@ void getDate(card *custCard, int type) {
         char buffer[BUFFER_SIZE];
         int mm, yy;
 
+
         while(!isValid) {
             printf("Enter %s date in mm/yy: ", type == 10  ? "issue" : "expiry");
             if (fgets(buffer, sizeof(buffer), stdin)) {
@@ -220,18 +226,24 @@ void getDate(card *custCard, int type) {
                         if(issueDateAssign(custCard, mm, yy)) {
                             isValid = TRUE;
                         }
+                        else {
+                            printf("Invalid %s date. Please enter in format mm/yy\n", "issue");
+                        }
 
                     }
                     else if(type == 20) {
                         if(issueExpiryAssign(custCard, mm, yy)) {
                             isValid = TRUE;
                         }
+                        else  {
+                            printf("Invalid %s date. Please enter in format mm/yy\n", "expiry");
+                        }
 
                     }
 
                 }
                 else {
-                    printf("Invalid issue date. Please enter in format mm/yy\n");
+                    printf("Invalid %s date. Please enter in format mm/yy\n", type == 10 ? "issue" : "expiry");
                 }
             }
         }
@@ -467,13 +479,16 @@ void searchExpiryDate() {
     int date;
     int isValid = FALSE;
     int numFound = 0;
+    // Edit as required
+    int maxYear = 99;
+    int minYear = 22;
 
     while(!isValid) {
         printf("Enter the expiry date to search for (mm/yy): ");
         if (fgets(buffer, sizeof(buffer), stdin)) {
             fflush(stdin);
             if(2 == sscanf(buffer, "%d/%d", &mm, &yy)) {
-                if ((mm >=1 && mm <= 12) && (yy >= 21) && (yy <= 99)) {
+                if ((mm >=1 && mm <= 12) && (yy >= minYear) && (yy <= maxYear)) {
                     isValid = TRUE;
                 }
                 else {
@@ -526,7 +541,7 @@ int printMenu() {
         if (fgets(buffer, sizeof(buffer), stdin)) {
             fflush(stdin);
             if (1 == sscanf(buffer, "%d", &choice)) {
-                if(choice <= menuOptions && choice >= 0) {
+                if(choice <= menuOptions && choice >= 1) {
                     return choice;
                 }
                 else {
@@ -596,9 +611,6 @@ int main() {
         menu_choice = printMenu();
 
         switch(menu_choice) {
-            case 0:
-                createDeveloperCard();
-                break;
             case 1:
                 createNewCard();
                 break;
