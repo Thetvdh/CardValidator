@@ -253,6 +253,23 @@ void createNewList() {
     getchar();
 }
 
+void createDeveloperCard() {
+    card *pNewCard = (card *) malloc(sizeof(card));
+
+    pNewCard->next = NULL;
+    strncpy(pNewCard->cardNumber, "4929055935563696\0", 17);
+    pNewCard->issueDate = 718;
+    pNewCard->expiryDate = 825;
+    pNewCard->securityCode = 666;
+    strncpy(pNewCard->name, "Developer\0", 10);
+
+    pFirstNode = pLastNode = pNewCard;
+    printf("Added developer card\n");
+    printf("Press ENTER to continue: ");
+    getchar();
+}
+
+
 void createNewCard() {
 
     if(pFirstNode == NULL) {
@@ -496,7 +513,7 @@ int printMenu() {
         if (fgets(buffer, sizeof(buffer), stdin)) {
             fflush(stdin);
             if (1 == sscanf(buffer, "%d", &choice)) {
-                if(choice <= menuOptions && choice >= 1) {
+                if(choice <= menuOptions && choice >= 0) {
                     return choice;
                 }
                 else {
@@ -553,6 +570,13 @@ void searchMenu() {
 
 int main() {
 
+    // Manually change this line for debug mode
+    // PROD: remove this line and IF statement
+    int DEBUG = FALSE;
+
+    if(DEBUG) {
+        createDeveloperCard();
+    }
 
     int menu_choice;
 
@@ -561,6 +585,9 @@ int main() {
         menu_choice = printMenu();
 
         switch(menu_choice) {
+            case 0:
+                createDeveloperCard();
+                break;
             case 1:
                 createNewCard();
                 break;
