@@ -8,7 +8,7 @@ A C Card validator for VISA cards including a Card number validator, a CVV valid
 
 # Usage
 
-gcc -std=c11 card.c -o card
+gcc -std=c17 card.c -o card
 
 CMakeLists available for those who would prefer
 
