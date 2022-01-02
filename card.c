@@ -167,7 +167,7 @@ void getCardNumber(card *custCard) {
             if (1 == sscanf(buffer, "%[^\n]s", number)) {
                 if (validateCardNumber(number) && ((strlen(number) == 13) || (strlen(number) == 16) || (strlen(number) == 19))) {
 		            number[CARDNUMBER_CAP] = '\0';
-                    if(luhnValid(number)) {
+                    if(luhnValid(number) && number[0] == '4') {
                         strncpy(custCard->cardNumber, number, CARDNUMBER_CAP);
                         isValid = TRUE;
                     }
