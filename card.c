@@ -645,7 +645,8 @@ int main() {
                 break;
             case 4:
                 CLEAR_SCREEN;
-                printf("Thank you for using card validator!\n");
+                printf("Thank you for using card validator!\nPlease press ENTER to quit!");
+                getchar();
                 exit(EXIT_SUCCESS);
             default:
                 printf("Incorrect value has been entered. Please try again.\n");
