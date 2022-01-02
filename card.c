@@ -158,7 +158,7 @@ void getCardNumber(card *custCard) {
     int isValid = FALSE;
 
     while(!isValid) {
-        printf("Enter card number: ");
+        printf("Enter card number (no spaces): ");
 
         if (fgets(buffer, sizeof(buffer), stdin)) {
             fflush(stdin);
