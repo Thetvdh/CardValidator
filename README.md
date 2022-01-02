@@ -16,6 +16,10 @@ Follow prompts on screen for usage.
 
 Mock card numbers can be found <a href="https://www.freeformatter.com/credit-card-number-generator-validator.html">here</a>
 
+# Suggestions?
+
+If you have any suggestions please raise them as an issue with the label "enhancement".
+
 
 # Disclaimer
 
