@@ -10,7 +10,8 @@ A C Card validator for VISA cards including a Card number validator, a CVV valid
 
 gcc -std=c17 card.c -o card
 
-CMakeLists available for those who would prefer
+CMakeLists available for windows developers who want to work on the code. 
+The IDE used for this project is JetBrains <a href="https://www.jetbrains.com/clion/">CLion</a>
 
 Follow prompts on screen for usage.
 
